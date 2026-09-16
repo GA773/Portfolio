@@ -5,7 +5,6 @@ import { HeroScene } from '../../three/HeroScene';
 import { containerStagger, fadeUp } from '../../utils/animations';
 import './Hero.css';
 
-const GITHUB_URL = 'https://github.com/gauravkumar';
 const LINKEDIN_URL = 'https://linkedin.com/in/gaurav-kumar-7897a52b5';
 
 export function Hero() {
