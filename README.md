@@ -1,32 +1,89 @@
-# React + TypeScript + Vite
+# Gaurav Kumar — 3D Developer Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A modern, interactive developer portfolio showcasing full-stack projects, built with React, TypeScript, Vite, and Three.js for a premium 3D experience.
 
-Currently, two official plugins are available:
+## 🚀 Live Demo
+Coming soon — deployment will be added.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Features
+- Interactive 3D experience
+- Responsive design
+- Smooth animations
+- Custom cursor
+- Project showcase
+- Skills section
+- Education section
+- Certifications section
+- Contact section
 
-## React Compiler
+## 🛠 Tech Stack
+- **Frontend Framework**: React 19, TypeScript, Vite
+- **3D Graphics**: Three.js, React Three Fiber, React Three Drei
+- **Animations**: Framer Motion, GSAP
+- **Styling**: Custom CSS
+- **Code Quality**: Oxlint
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🎨 3D Experience
+This portfolio integrates custom Three.js graphics to create an engaging visual experience:
+- **HeroScene**: The main interactive 3D scene featured on the landing section.
+- **ParticleField**: A dynamic field of particles providing an immersive background.
+- **DigitalCore**: An abstract 3D core element to visually represent technical depth.
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## 📂 Project Structure
+```text
+src/
+├── components/
+│   ├── About/
+│   ├── Certifications/
+│   ├── Contact/
+│   ├── CustomCursor/
+│   ├── Education/
+│   ├── Footer/
+│   ├── Hero/
+│   ├── Navigation/
+│   ├── Projects/
+│   └── Skills/
+├── data/
+├── hooks/
+├── three/
+│   ├── DigitalCore.tsx
+│   ├── HeroScene.tsx
+│   └── ParticleField.tsx
+├── utils/
+├── App.tsx
+├── index.css
+└── main.tsx
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## ⚙️ Getting Started
+
+To run this project locally:
+
+```bash
+git clone https://github.com/GA773/Portfolio.git
+cd Portfolio
+npm install
+npm run dev
+```
+
+## 🏗 Production Build
+
+To create and test a production build:
+
+```bash
+npm run build
+npm run preview
+```
+
+## 📱 Responsive Design
+The portfolio features a fully responsive layout tailored for desktop, tablet, and mobile devices, ensuring the interactive 3D elements and smooth animations function gracefully across all screen sizes.
+
+## 👨‍💻 About Me
+I'm a Computer Science & Information Technology student building full-stack applications that combine clean engineering with real-world utility. My focus is on full-stack development with a strong interest in backend architecture, AI-driven applications, and scalable system design. I work extensively with React.js on the frontend, and Node.js/Express.js and Spring Boot on the backend, alongside relational and document databases (PostgreSQL, MySQL, MongoDB).
+
+## 📬 Contact
+- **LinkedIn**: [gaurav-kumar-7897a52b5](https://linkedin.com/in/gaurav-kumar-7897a52b5)
+- **Email**: [gauravkumar9282@gmail.com](mailto:gauravkumar9282@gmail.com)
+
+## 📄 License
+This project currently does not specify an open-source license.
