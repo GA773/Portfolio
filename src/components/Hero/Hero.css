@@ -4,7 +4,7 @@
   min-height: 100dvh;
   display: flex;
   align-items: center;
-  overflow: hidden;
+  overflow-x: clip;
   background: radial-gradient(circle at 72% 48%, rgba(255,191,42,.28), transparent 35%), linear-gradient(135deg,#fffdf8 0%,#f3ead9 100%);
 }
 
