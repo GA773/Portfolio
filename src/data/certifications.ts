@@ -8,6 +8,7 @@ export interface Certification {
   downloadFilename?: string;
   previewImage?: string;
   completionDate?: string;
+  credentialId?: string;
 }
 
 export const certifications: Certification[] = [
@@ -43,6 +44,17 @@ export const certifications: Certification[] = [
     downloadFilename: 'Gaurav-Kumar-HTML-Essentials-Cisco.pdf',
     previewImage: '/certificates/html-essentials-cisco.png',
     completionDate: '16 Sep 2025',
+  },
+  {
+    id: 'dsa-java-apna-college',
+    title: 'Alpha (DSA with Java)',
+    issuer: 'Apna College',
+    status: 'Completed',
+    credentialUrl: '/certificates/dsa-java-apna-college.pdf',
+    downloadUrl: '/certificates/dsa-java-apna-college.pdf',
+    downloadFilename: 'Gaurav-Kumar-Alpha-DSA-Java-Apna-College.pdf',
+    previewImage: '/certificates/dsa-java-apna-college.png',
+    credentialId: '69ebb92a56d1da641a037dea',
   },
   {
     id: 'mern-stack-development',

@@ -94,6 +94,10 @@
   background: rgba(255, 251, 242, 0.82);
 }
 
+.cert-card--in-progress:last-child {
+  grid-column: 1 / -1;
+}
+
 /* Card Meta: Eyebrow + Badge */
 .cert-card__meta {
   display: flex;

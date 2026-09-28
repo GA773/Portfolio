@@ -147,6 +147,11 @@ export function Certifications() {
                         Issued: {cert.completionDate}
                       </span>
                     )}
+                    {cert.credentialId && (
+                      <span className="cert-card__date">
+                        Credential ID: {cert.credentialId}
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -235,7 +240,9 @@ export function Certifications() {
                   <div className="cert-modal__title-group">
                     <h3 className="cert-modal__title">{activeCert.title}</h3>
                     <span className="cert-modal__subtitle">
-                      {activeCert.issuer} {activeCert.completionDate ? `• ${activeCert.completionDate}` : ''}
+                      {activeCert.issuer}
+                      {activeCert.completionDate ? ` • ${activeCert.completionDate}` : ''}
+                      {activeCert.credentialId ? ` • ID: ${activeCert.credentialId}` : ''}
                     </span>
                   </div>
 
