@@ -14,7 +14,7 @@ export function contactEmail({ name, email, message }) {
   const mailtoUrl = `mailto:${encodeURIComponent(email)}?subject=${safeReplySubject}`;
 
   return {
-    subject: `✨ New Portfolio Inquiry from ${name}`,
+    subject: `[Portfolio Message] ${name} (${email})`,
     text: `New Portfolio Message Received\n──────────────────────────────────────\nFrom:    ${name} <${email}>\n\nMessage:\n${message}\n\n──────────────────────────────────────\nReply to this email to contact the sender directly (${email}).`,
     html: `<!doctype html>
 <html lang="en">
@@ -206,10 +206,15 @@ export function createContactHandler({ env = process.env, createTransport = node
         disableFileAccess: true, disableUrlAccess: true,
       });
       await transport.sendMail({
-        from: { name: 'Gaurav Kumar · Portfolio', address: smtpUser },
+        from: { name: `${name.trim()} via Portfolio`, address: smtpUser },
         to: recipient,
-        replyTo: { name: name.trim(), address: email },
-        ...contactEmail({ name: name.trim(), email, message: message.trim() }),
+        replyTo: { name: name.trim(), address: email.trim() },
+        priority: 'high',
+        headers: {
+          'X-Priority': '1',
+          'Importance': 'high',
+        },
+        ...contactEmail({ name: name.trim(), email: email.trim(), message: message.trim() }),
       });
       return reply(200);
     } catch {
