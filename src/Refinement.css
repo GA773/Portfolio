@@ -25,7 +25,8 @@ body::before { display:none; }
 .hero__role .hero__role-emphasis { margin:0; color:#a46c0e; }
 .hero__tagline { font-size:14px; line-height:1.75; max-width:370px; font-weight:400; color:#716958; }
 .hero__socials { position:absolute; bottom:-38px; left:0; gap:15px; }
-.hero__socials .btn-icon { border:0; padding:0; color:#79705e; }
+.hero__socials .btn-icon { border:0; padding:0; color:#79705e; display:inline-flex; align-items:center; justify-content:center; transition:color var(--transition-base), transform var(--transition-base); }
+.hero__socials .btn-icon:hover { color:var(--color-text-primary); transform:translateY(-1px); }
 .hero__stack-note { display:flex; gap:12px; align-items:center; flex-wrap:wrap; padding-top:14px; border-top:1px solid #3c321f19; font-size:10px; }
 .hero__stack-note > span { width:100%; font:400 8px var(--font-mono); letter-spacing:.12em; color:#7d745f; }
 .hero__stack-note strong { font-weight:600; color:#5b5447; }
