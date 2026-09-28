@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { fadeUpCustom } from '../../utils/animations';
 import './Contact.css';
@@ -8,16 +8,38 @@ const EMAIL = 'gauravkumar9282@gmail.com';
 
 export function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [feedback, setFeedback] = useState('');
+  const sending = useRef(false);
+  const honeypot = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData((p) => ({ ...p, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent(`Portfolio Contact from ${formData.name}`);
-    const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`);
-    window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
+    if (sending.current) return;
+    sending.current = true;
+    setStatus('sending');
+    setFeedback('Sending your message…');
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, website: honeypot.current?.value || '' }),
+        signal: AbortSignal.timeout(30000),
+      });
+      const result = await response.json();
+      if (!response.ok || result.ok !== true) throw new Error('send-failed');
+      setStatus('success');
+      setFeedback('Thank you! Your message has been sent. I’ll get back to you soon.');
+      setFormData({ name: '', email: '', message: '' });
+    } catch {
+      setStatus('error');
+      setFeedback('Unable to confirm delivery. Please try again later or contact me using the email link.');
+    } finally {
+      sending.current = false;
+    }
   };
 
   return (
@@ -104,7 +126,12 @@ export function Contact() {
               className="contact__form"
               onSubmit={handleSubmit}
               aria-label="Contact form"
+              aria-busy={status === 'sending'}
             >
+              <div className="contact__honeypot" aria-hidden="true">
+                <label htmlFor="contact-website">Leave this field empty</label>
+                <input ref={honeypot} id="contact-website" name="website" tabIndex={-1} autoComplete="off" />
+              </div>
               <div className="form-group">
                 <label className="form-label" htmlFor="contact-name">Name</label>
                 <input
@@ -117,6 +144,8 @@ export function Contact() {
                   onChange={handleChange}
                   required
                   autoComplete="name"
+                  maxLength={80}
+                  disabled={status === 'sending'}
                 />
               </div>
 
@@ -132,6 +161,8 @@ export function Contact() {
                   onChange={handleChange}
                   required
                   autoComplete="email"
+                  maxLength={254}
+                  disabled={status === 'sending'}
                 />
               </div>
 
@@ -143,6 +174,9 @@ export function Contact() {
                   className="form-textarea"
                   placeholder="Tell me about your project or opportunity..."
                   rows={5}
+                  minLength={10}
+                  maxLength={5000}
+                  disabled={status === 'sending'}
                   value={formData.message}
                   onChange={handleChange}
                   required
@@ -153,13 +187,14 @@ export function Contact() {
                 id="contact-submit"
                 type="submit"
                 className="btn btn-primary contact__submit"
-                aria-label="Send message via email"
+                disabled={status === 'sending'}
               >
-                Send Message
+                {status === 'sending' ? 'Sending…' : 'Send Message'}
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                   <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
+              <p className={`contact__feedback contact__feedback--${status}`} role="status" aria-live="polite">{feedback}</p>
             </form>
           </motion.div>
         </div>

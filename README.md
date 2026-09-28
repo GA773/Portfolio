@@ -2,6 +2,7 @@
 
 <div align="center">
 
+  [![Live Demo](https://img.shields.io/badge/Live_Demo-portfolio--mu--nine--56.vercel.app-success?style=for-the-badge&logo=vercel)](https://portfolio-mu-nine-56.vercel.app/)
   [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
   [![Three.js](https://img.shields.io/badge/Three.js-WebGL-black?style=for-the-badge&logo=three.js&logoColor=white)](https://threejs.org/)
@@ -13,6 +14,8 @@
   </p>
 
   <p align="center">
+    <a href="https://portfolio-mu-nine-56.vercel.app/"><strong>🌐 Visit Live Portfolio »</strong></a>
+    &nbsp;·&nbsp;
     <a href="https://github.com/GA773/Portfolio"><strong>Explore the Repository »</strong></a>
     <br />
     <br />

@@ -42,10 +42,18 @@ export function Education() {
                 </div>
 
                 <div className="edu-item__content">
-                  <div className="edu-item__period">{edu.period}</div>
+                  <div className="edu-item__meta">
+                    <span className="edu-item__period">{edu.period}</span>
+                    {edu.status && (
+                      <span className="edu-item__status">
+                        <span className="edu-item__status-dot" aria-hidden="true" />
+                        {edu.status}
+                      </span>
+                    )}
+                  </div>
                   <h3 className="edu-item__institution">{edu.institution}</h3>
                   <p className="edu-item__degree">
-                    {edu.degree} — {edu.field}
+                    {edu.degree}{edu.field ? ` — ${edu.field}` : ''}
                   </p>
                   <p className="edu-item__location">{edu.location}</p>
                 </div>

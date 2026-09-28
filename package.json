@@ -2,6 +2,7 @@
   "name": "untitled-folder-2",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://portfolio-mu-nine-56.vercel.app",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,6 +15,7 @@
     "@react-three/fiber": "^9.7.0",
     "framer-motion": "^13.4.0",
     "gsap": "^3.15.0",
+    "nodemailer": "^10.0.12",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "three": "^0.186.0"
