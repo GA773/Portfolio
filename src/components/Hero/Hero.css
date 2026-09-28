@@ -122,17 +122,13 @@
 
 /* Layered portrait: perspective, depth frames and parallax create a lightweight 3D photo sculpture. */
 .hero__portrait-scene {
-  position:absolute;
+  position:relative;
   z-index:3;
-  right:clamp(3rem,8vw,9rem);
-  top:50%;
-  width:clamp(250px,28vw,410px);
-  aspect-ratio: .73;
+  width:100%;
+  aspect-ratio:3/4;
   perspective:1200px;
   transform-style:preserve-3d;
-  translate:0 -48%;
-  transform:rotateX(var(--portrait-rx)) rotateY(var(--portrait-ry));
-  transition:transform .18s ease-out;
+  /* Keep the photo in flow. Motion owns transforms; no legacy centering offset. */
 }
 .hero__portrait-stage { position:absolute; inset:0; transform-style:preserve-3d; will-change:transform; }
 .hero__portrait-card,.hero__portrait-frame { position:absolute; inset:0; border-radius:32px; clip-path:polygon(0 0,88% 0,100% 8%,100% 100%,12% 100%,0 92%); }
@@ -214,7 +210,6 @@
   .hero__orbit-labels, .hero__side-note { display:none; }
   .hero { min-height:1180px; align-items:flex-start; }
   .hero__content { min-height:1180px; justify-content:flex-start; padding-top:120px; }
-  .hero__portrait-scene { width:min(72vw,330px); left:50%; right:auto; top:680px; bottom:auto; z-index:3; opacity:1 !important; filter:none; translate:-50% 0; transform:rotateX(var(--portrait-rx)) rotateY(var(--portrait-ry)); }
   .hero__portrait-caption { display:flex; }
 
   .hero__text {
