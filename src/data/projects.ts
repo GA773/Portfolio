@@ -9,26 +9,26 @@ export interface Project {
   tools: string[];
   status: 'active' | 'complete' | 'wip';
   year: string;
+  githubUrl?: string;
+  liveUrl?: string;
 }
 
 export const projects: Project[] = [
   {
     id: 'ai-stock-vision',
-    title: 'AI Stock Vision',
-    subtitle: 'AI-Powered Stock Analysis & Prediction',
+    githubUrl: 'https://github.com/GA773/AI-StockVision',
+    title: 'AI StockVision',
+    subtitle: 'Stock Forecasting & Portfolio Analysis',
     description:
-      'A full-stack web application that delivers interactive stock market analysis and ML-based price prediction using GRU neural networks and live market data.',
+      'An academic full-stack prototype for exploring historical stock data, comparing ML forecasts, and understanding portfolio risk.',
     longDescription:
-      'AI Stock Vision combines real-time stock data ingestion with a GRU (Gated Recurrent Unit) prediction model to generate forward-looking insights. The React.js frontend renders interactive charts and market dashboards while the Node.js/Express.js backend orchestrates data pipelines, model inference, and REST API endpoints.',
+      'AI StockVision pairs a React and TypeScript dashboard with Java Spring Boot REST APIs and PostgreSQL. Its forecasting pipeline combines LSTM, GRU, XGBoost, and FinBERT news sentiment, alongside technical indicators and portfolio risk analysis. It uses historical data, not live market feeds. Built as an academic prototype, it is not intended for investment or trading decisions.',
     features: [
-      'Live stock market data ingestion and visualization',
-      'GRU-based sequence model for price prediction',
-      'Interactive market analysis dashboard',
-      'REST API architecture with Express.js',
-      'Real-time data updates',
-      'Responsive chart interface',
+      'Historical price charts with RSI, MACD, and moving averages',
+      'Multimodal forecasts combining price models and news sentiment',
+      'Portfolio allocation and risk analysis by investor risk profile',
     ],
-    stack: ['React.js', 'Node.js', 'Express.js', 'GRU Model'],
+    stack: ['Java', 'Spring Boot', 'React', 'TypeScript', 'PostgreSQL'],
     tools: ['Git', 'GitHub', 'Postman'],
     status: 'active',
     year: '2024',

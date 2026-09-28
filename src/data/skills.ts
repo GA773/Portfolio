@@ -10,6 +10,7 @@ export const skills: Skill[] = [
   // Languages
   { id: 'java',       name: 'Java',        category: 'languages' },
   { id: 'javascript', name: 'JavaScript',  category: 'languages' },
+  { id: 'typescript', name: 'TypeScript', category: 'languages' },
   { id: 'html',       name: 'HTML',        category: 'languages' },
   { id: 'css',        name: 'CSS',         category: 'languages' },
   { id: 'sql',        name: 'SQL',         category: 'languages' },
@@ -18,7 +19,6 @@ export const skills: Skill[] = [
   { id: 'react',       name: 'React.js',     category: 'frameworks' },
   { id: 'nodejs',      name: 'Node.js',      category: 'frameworks' },
   { id: 'express',     name: 'Express.js',   category: 'frameworks' },
-  { id: 'mongoose',    name: 'Mongoose',     category: 'frameworks' },
   { id: 'springboot',  name: 'Spring Boot',  category: 'frameworks' },
 
   // Databases
@@ -40,8 +40,8 @@ export const categoryLabels: Record<SkillCategory, string> = {
 };
 
 export const categoryColors: Record<SkillCategory, string> = {
-  languages:  '#6ee7b7',
-  frameworks: '#93c5fd',
-  databases:  '#c084fc',
-  tools:      '#fbbf24',
+  languages:  '#a16b11',
+  frameworks: '#514b3e',
+  databases:  '#95805b',
+  tools:      '#d4a027',
 };

@@ -27,6 +27,18 @@ export function About() {
               About
             </h2>
             <div className="about__accent-line" aria-hidden="true" />
+            <p className="section-aside">Curiosity drives the idea.<br />Engineering makes it real.</p>
+            <div className="about__signature" aria-hidden="true">
+              <div className="about__signature-mark">
+                <svg viewBox="0 0 40 32" fill="none">
+                  <path d="M18 8a9 9 0 1 0 0 16v-8h-7M24 6v20M35 6 24 16l12 10" stroke="currentColor" strokeWidth="2.7" strokeLinecap="square" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <div className="about__signature-copy">
+                <strong>Gaurav Kumar</strong>
+                <span>Full-stack developer</span>
+              </div>
+            </div>
           </motion.div>
 
           {/* Right: content */}

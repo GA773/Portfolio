@@ -1,14 +1,15 @@
-import { Suspense } from 'react';
-import { motion } from 'framer-motion';
+import type { CSSProperties } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useMousePosition } from '../../hooks/useMousePosition';
-import { HeroScene } from '../../three/HeroScene';
 import { containerStagger, fadeUp } from '../../utils/animations';
+import portrait from '../../assets/gaurav-portrait.jpg';
 import './Hero.css';
 
 const LINKEDIN_URL = 'https://linkedin.com/in/gaurav-kumar-7897a52b5';
 
 export function Hero() {
   const { normalised } = useMousePosition();
+  const reducedMotion = useReducedMotion();
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -16,13 +17,6 @@ export function Hero() {
 
   return (
     <section id="hero" className="hero" aria-label="Hero section">
-      {/* 3D Canvas */}
-      <div className="hero__canvas-wrap" aria-hidden="true">
-        <Suspense fallback={null}>
-          <HeroScene mouseX={normalised.x} mouseY={normalised.y} />
-        </Suspense>
-      </div>
-
       {/* Vignette overlay */}
       <div className="hero__vignette" aria-hidden="true" />
 
@@ -37,22 +31,25 @@ export function Hero() {
           {/* Status badge */}
           <motion.div variants={fadeUp} className="hero__badge">
             <span className="hero__badge-dot" aria-hidden="true" />
-            Available for opportunities
+            Open to internships & collaborations
           </motion.div>
+          <p className="hero__eyebrow">HELLO, I'M A DEVELOPER & A CURIOUS BUILDER</p>
 
           {/* Name */}
           <motion.h1 variants={fadeUp} className="hero__name">
-            Gaurav<br />Kumar
+            <span className="hero__name-line">Gaurav</span>
+            <span className="hero__name-line hero__name-line--outline">Kumar</span>
           </motion.h1>
 
           {/* Role */}
           <motion.p variants={fadeUp} className="hero__role">
-            Full-Stack Developer
+            Full-Stack Developer <span className="hero__role-emphasis">| Java | React</span>
           </motion.p>
 
           {/* Tagline */}
           <motion.p variants={fadeUp} className="hero__tagline">
-            Building intelligent, scalable web experiences.
+            I build web applications with Java, Spring Boot and React.
+            Seeking internship and placement opportunities in full-stack development.
           </motion.p>
 
           {/* CTAs */}
@@ -102,7 +99,61 @@ export function Hero() {
               </svg>
             </a>
           </motion.div>
+          <div className="hero__stack-note"><span>MY EVERYDAY TOOLKIT</span>{['Java', 'Spring Boot', 'React', 'TypeScript', 'Node.js', 'PostgreSQL'].map((name) => <strong key={name}>{name}</strong>)}</div>
         </motion.div>
+
+        <div className="hero__visual">
+        <div className="hero__visual-label"><span>THE PERSON BEHIND THE CODE</span><span>↘</span></div>
+        <motion.div
+          className="hero__portrait-scene"
+          initial={{ opacity: 0, scale: 0.88, x: 60 }}
+          animate={{
+            opacity: 1,
+            scale: 1,
+            x: reducedMotion ? 0 : normalised.x * 10,
+            y: reducedMotion ? 0 : normalised.y * 6,
+          }}
+          transition={{ type: 'spring', stiffness: 90, damping: 20, mass: 0.7 }}
+          style={{
+            '--portrait-rx': `${normalised.y * -5}deg`,
+            '--portrait-ry': `${normalised.x * 7}deg`,
+          } as CSSProperties}
+          aria-label="3D portrait of Gaurav Kumar"
+        >
+          <div className="hero__portrait-shadow" aria-hidden="true" />
+          <motion.div
+            className="hero__portrait-stage"
+            animate={{ rotateY: reducedMotion ? 0 : [-7, -7, 353, 353] }}
+            transition={{ duration: 26, times: [0, 0.68, 0.84, 1], repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <div className="hero__portrait-frame hero__portrait-frame--back" aria-hidden="true" />
+            <div className="hero__portrait-frame hero__portrait-frame--mid" aria-hidden="true" />
+            <div className="hero__portrait-card hero__portrait-card--front">
+              <img src={portrait} alt="Gaurav Kumar in a modern workspace" width={1050} height={1400} fetchPriority="high" decoding="async" className="hero__portrait-image" />
+              <div className="hero__portrait-shine" aria-hidden="true" />
+              <div className="hero__portrait-caption">
+                <span>Full-Stack Developer</span>
+                <strong>GK · 01</strong>
+              </div>
+            </div>
+            <div className="hero__portrait-card hero__portrait-card--rear" aria-hidden="true">
+              <img src={portrait} alt="" width={1050} height={1400} decoding="async" className="hero__portrait-image hero__portrait-image--rear" />
+              <div className="hero__portrait-backplate">
+                <span>GK</span>
+                <small>Full-Stack · AI · Systems</small>
+              </div>
+            </div>
+          </motion.div>
+          <div className="hero__portrait-ring hero__portrait-ring--one" aria-hidden="true" />
+          <div className="hero__portrait-ring hero__portrait-ring--two" aria-hidden="true" />
+        </motion.div>
+        <div className="hero__visual-note"><span className="hero__note-symbol">↗</span><div><strong>Ideas → real products</strong><span>Full-stack development · AI applications</span></div></div>
+        <span className="hero__photo-hint">A LITTLE PERSPECTIVE. A LOT OF POSSIBILITY.</span>
+        </div>
+
+        <div className="hero__side-note" aria-hidden="true">
+          <span>Based in India · Building for the web</span>
+        </div>
 
         {/* Scroll indicator */}
         <motion.div

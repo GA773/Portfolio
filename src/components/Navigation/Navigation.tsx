@@ -40,9 +40,15 @@ export function Navigation() {
   return (
     <>
       <nav className={`nav ${scrolled ? 'nav--scrolled' : ''}`} role="navigation" aria-label="Main navigation">
-        <div className="nav__logo" aria-label="Gaurav Kumar — Home" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          <span className="nav__logo-mark">GK</span>
-        </div>
+        <button type="button" className="nav__logo" aria-label="Gaurav Kumar — Home" onClick={() => scrollTo('hero')}>
+          <span className="nav__logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 40 32" fill="none">
+              <path d="M18 8a9 9 0 1 0 0 16v-8h-7M24 6v20M35 6 24 16l12 10" stroke="currentColor" strokeWidth="2.7" strokeLinecap="square" strokeLinejoin="round" />
+            </svg>
+            <span className="nav__logo-accent" />
+          </span>
+          <span className="nav__logo-name" aria-hidden="true">Gaurav Kumar<span>Developer & builder</span></span>
+        </button>
 
         {/* Desktop links */}
         <ul className="nav__links" role="list">

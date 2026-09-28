@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { projects } from '../../data/projects';
 import { fadeUp } from '../../utils/animations';
@@ -36,7 +36,7 @@ function StockViz() {
         { x: 560, open: 90,  close: 65,  high: 50,  low: 105 },
       ].map((c, i) => {
         const isUp = c.close < c.open;
-        const color = isUp ? '#6ee7b7' : '#f87171';
+        const color = isUp ? '#b6ff6a' : '#ff6b8b';
         const top = Math.min(c.open, c.close);
         const h = Math.abs(c.close - c.open);
         return (
@@ -56,7 +56,7 @@ function StockViz() {
       {/* Prediction line */}
       <polyline
         points="30,140 90,100 150,95 210,100 270,75 330,80 390,85 450,62 510,70 560,77 600,55"
-        stroke="#6ee7b7"
+        stroke="#b6ff6a"
         strokeWidth="1.5"
         fill="none"
         strokeDasharray="4 3"
@@ -66,7 +66,7 @@ function StockViz() {
       {/* Actual line */}
       <polyline
         points="30,140 90,100 150,95 210,100 270,75 330,80 390,85 450,62 510,70 560,77"
-        stroke="#93c5fd"
+        stroke="#9b87f5"
         strokeWidth="2"
         fill="none"
         opacity="0.7"
@@ -76,10 +76,10 @@ function StockViz() {
 
       {/* Legend */}
       <g>
-        <circle cx="20" cy="210" r="3" fill="#93c5fd" />
-        <text x="30" y="214" fontSize="9" fill="rgba(255,255,255,0.4)" fontFamily="Inter, sans-serif">Live data</text>
-        <circle cx="110" cy="210" r="3" fill="#6ee7b7" />
-        <text x="120" y="214" fontSize="9" fill="rgba(255,255,255,0.4)" fontFamily="Inter, sans-serif">GRU prediction</text>
+        <circle cx="20" cy="210" r="3" fill="#9b87f5" />
+        <text x="30" y="214" fontSize="9" fill="rgba(255,255,255,0.4)" fontFamily="DM Mono, monospace">Historical data</text>
+        <circle cx="150" cy="210" r="3" fill="#b6ff6a" />
+        <text x="160" y="214" fontSize="9" fill="rgba(255,255,255,0.4)" fontFamily="DM Mono, monospace">Model forecast</text>
       </g>
     </svg>
   );
@@ -88,6 +88,32 @@ function StockViz() {
 export function Projects() {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const project = projects[0];
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!selectedProject) return;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const frame = requestAnimationFrame(() => modalRef.current?.querySelector<HTMLButtonElement>('button')?.focus());
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSelectedProject(null);
+      if (event.key !== 'Tab') return;
+      const nodes = modalRef.current?.querySelectorAll<HTMLElement>('a[href], button:not(:disabled), [tabindex="0"]');
+      if (!nodes?.length) return;
+      const first = nodes[0];
+      const last = nodes[nodes.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      cancelAnimationFrame(frame);
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = previousOverflow;
+      previousFocus?.focus();
+    };
+  }, [selectedProject]);
 
   return (
     <section id="projects" className="section projects" aria-labelledby="projects-heading">
@@ -126,7 +152,11 @@ export function Projects() {
           {/* Visual area */}
           <div className="project-card__visual">
             <div className="project-card__viz-wrap">
+              <div className="dashboard-top"><span>◈ &nbsp; STOCK VISION</span><span>Overview &nbsp; •••</span></div>
+              <div className="dashboard-title"><small>MARKET INTELLIGENCE</small><strong>See the bigger picture.</strong><span>Historical trends + multimodal forecasts</span></div>
               <StockViz />
+              <div className="dashboard-bottom"><span>01 &nbsp; Historical analysis</span><span>02 &nbsp; Predictive models</span></div>
+              <p className="dashboard-demo">Illustrative project preview</p>
             </div>
             <div className="project-card__year" aria-label={`Year: ${project.year}`}>
               {project.year}
@@ -148,7 +178,7 @@ export function Projects() {
 
             {/* Feature list */}
             <ul className="project-card__features" aria-label="Key features">
-              {project.features.slice(0, 4).map((f) => (
+              {project.features.slice(0, 3).map((f) => (
                 <li key={f} className="project-card__feature">
                   <span className="project-card__feature-dot" aria-hidden="true" />
                   {f}
@@ -158,16 +188,19 @@ export function Projects() {
 
             {/* Tech stack tags */}
             <div className="project-card__stack" aria-label="Technologies used">
-              {project.stack.map((tech) => (
+              {Array.from(new Set(project.stack)).map((tech) => (
                 <span key={tech} className="project-card__tech">{tech}</span>
-              ))}
-              {project.tools.map((tool) => (
-                <span key={tool} className="project-card__tech project-card__tech--tool">{tool}</span>
               ))}
             </div>
 
             {/* Actions */}
             <div className="project-card__actions">
+              {project.githubUrl ? (
+                <a className="btn btn-primary" href={project.githubUrl} target="_blank" rel="noopener noreferrer" aria-label={`${project.title} on GitHub (opens in a new tab)`}>GitHub ↗</a>
+              ) : <button className="btn btn-primary" disabled aria-describedby="project-link-note">GitHub</button>}
+              {project.liveUrl ? (
+                <a className="btn btn-ghost" href={project.liveUrl} target="_blank" rel="noopener noreferrer" aria-label={`${project.title} live demo (opens in a new tab)`}>Live Demo ↗</a>
+              ) : <button className="btn btn-ghost" disabled aria-describedby="project-link-note">Live Demo — Coming Soon</button>}
               <button
                 id="project-details-btn"
                 className="btn btn-ghost"
@@ -181,6 +214,7 @@ export function Projects() {
                 </svg>
               </button>
             </div>
+            {(!project.githubUrl || !project.liveUrl) && <p id="project-link-note" className="project-card__link-note">{!project.githubUrl && !project.liveUrl ? 'Repository and live demo links are not yet available.' : !project.liveUrl ? 'Live demo link is not yet available.' : 'Repository link is not yet available.'}</p>}
           </div>
         </motion.article>
 
@@ -202,6 +236,7 @@ export function Projects() {
             onClick={(e) => { if (e.target === e.currentTarget) setSelectedProject(null); }}
           >
             <motion.div
+              ref={modalRef}
               className="project-modal__panel"
               initial={{ opacity: 0, y: 32, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -212,7 +247,6 @@ export function Projects() {
                 className="project-modal__close"
                 onClick={() => setSelectedProject(null)}
                 aria-label="Close project details"
-                autoFocus
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M1 1l14 14M15 1L1 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>

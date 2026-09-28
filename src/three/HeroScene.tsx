@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber';
-import { Environment, AdaptiveDpr } from '@react-three/drei';
+import { AdaptiveDpr } from '@react-three/drei';
 import { DigitalCore } from './DigitalCore';
 import { ParticleField } from './ParticleField';
 import { useDeviceDetect } from '../hooks/useDeviceDetect';
@@ -18,7 +18,7 @@ export function HeroScene({ mouseX = 0, mouseY = 0 }: HeroSceneProps) {
 
   return (
     <Canvas
-      camera={{ position: [0, 0, 6], fov: 50 }}
+      camera={{ position: [0, 0, 6.5], fov: 48 }}
       dpr={[1, isLowEnd ? 1 : 2]}
       gl={{ antialias: !isLowEnd, alpha: true, powerPreference: 'high-performance' }}
       style={{ background: 'transparent' }}
@@ -27,13 +27,12 @@ export function HeroScene({ mouseX = 0, mouseY = 0 }: HeroSceneProps) {
       <AdaptiveDpr pixelated />
       
       {/* Ambient light */}
-      <ambientLight color="#0a0a10" intensity={0.4} />
-      <directionalLight color="#ffffff" intensity={0.3} position={[5, 5, 5]} />
+      <ambientLight color="#161125" intensity={0.8} />
+      <directionalLight color="#ffffff" intensity={1.2} position={[5, 5, 5]} />
 
-      {/* Environment for metallic reflections */}
-      <Environment preset="city" />
-
-      <DigitalCore mouseX={mouseX} mouseY={mouseY} reducedMotion={reducedMotion} />
+      <group position={[isMobile ? 0.75 : 1.85, isMobile ? 0.65 : 0, 0]} scale={isMobile ? 0.78 : 1}>
+        <DigitalCore mouseX={mouseX} mouseY={mouseY} reducedMotion={reducedMotion} />
+      </group>
       <ParticleField count={particleCount} reducedMotion={reducedMotion} />
     </Canvas>
   );

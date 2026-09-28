@@ -30,10 +30,10 @@ export function ParticleField({ count = 80, reducedMotion = false }: ParticleFie
   }, [positions]);
 
   const material = useMemo(() => new THREE.PointsMaterial({
-    color: new THREE.Color('#6ee7b7'),
-    size: 0.022,
+    color: new THREE.Color('#c77d08'),
+    size: 0.032,
     transparent: true,
-    opacity: 0.55,
+    opacity: 0.72,
     sizeAttenuation: true,
   }), []);
 

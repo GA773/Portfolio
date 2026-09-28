@@ -104,7 +104,6 @@ export function Contact() {
               className="contact__form"
               onSubmit={handleSubmit}
               aria-label="Contact form"
-              noValidate
             >
               <div className="form-group">
                 <label className="form-label" htmlFor="contact-name">Name</label>
