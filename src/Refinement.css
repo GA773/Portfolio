@@ -132,6 +132,7 @@ body::before { display:none; }
   .about__signature { display:none; }
   .about__lead { font-size:20px; }
   .about__fact { grid-template-columns:1fr; gap:7px; }
+  .skills__top { align-items:flex-start; }
   .skills__filters { gap:6px; }
   .skills__filter { padding:8px 10px; font-size:10px; }
   .skills__grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
