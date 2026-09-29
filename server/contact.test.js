@@ -37,6 +37,32 @@ test('rejects invalid requests without SMTP', async () => {
 });
 test('fails safely when credentials are missing', async () => {
   assert.equal((await run(createContactHandler({ env: { ...env, SMTP_PASS: '' } }))).code, 503);
+  assert.equal((await run(createContactHandler({ env: { ...env, SMTP_USER: '' } }))).code, 503);
+  assert.equal((await run(createContactHandler({ env: { CONTACT_ORIGIN: 'https://example.com' } }))).code, 503);
+});
+test('supports SMTP_USERNAME and SMTP_PASSWORD aliases', async () => {
+  let transportConfig;
+  const aliasEnv = {
+    SMTP_HOST: 'mail.custom.example',
+    SMTP_PORT: '587',
+    SMTP_USERNAME: 'alias@example.com',
+    SMTP_PASSWORD: 'alias-pass-key',
+    CONTACT_ORIGIN: 'https://example.com',
+  };
+  const handler = createContactHandler({
+    env: aliasEnv,
+    createTransport: (cfg) => {
+      transportConfig = cfg;
+      return { sendMail: async () => {} };
+    },
+  });
+  const res = await run(handler);
+  assert.equal(res.code, 200);
+  assert.equal(transportConfig.host, 'mail.custom.example');
+  assert.equal(transportConfig.port, 587);
+  assert.equal(transportConfig.secure, false);
+  assert.equal(transportConfig.auth.user, 'alias@example.com');
+  assert.equal(transportConfig.auth.pass, 'alias-pass-key');
 });
 test('does not expose SMTP errors or falsely report success', async () => {
   const handler = createContactHandler({ env, createTransport: () => ({ sendMail: async () => { throw new Error('private-secret'); } }) });

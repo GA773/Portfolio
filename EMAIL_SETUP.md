@@ -6,16 +6,19 @@ or recipient. No automatic emails are sent to unverified visitor addresses.
 
 ## Setup
 
-1. Revoke the app password exposed in the shared screenshot. Generate a replacement
-   yourself in your Google account; do not paste it into chat or source code.
-2. In Vercel → project → Settings → Environment Variables, set:
-   - `SMTP_USER`: `gauravkumar9282@gmail.com`
-   - `SMTP_PASS`: your new Gmail app password
-   - `CONTACT_TO`: `gauravkumar9282@gmail.com`
+1. Revoke the exposed Gmail app password immediately in your Google Account security settings.
+   Generate a new replacement Gmail app password; do not paste it into chat or source code.
+2. In Vercel → project → Settings → Environment Variables (and/or local `.env.local`), set:
+   - `SMTP_USER` (or `SMTP_USERNAME`): your Gmail address
+   - `SMTP_PASS` (or `SMTP_PASSWORD`): your new Gmail app password
+   - `CONTACT_TO`: recipient email address (defaults to `SMTP_USER`)
    - `CONTACT_ORIGIN`: `https://portfolio-mu-nine-56.vercel.app` (no trailing slash)
-3. Enable the variables for Production and redeploy the updated code. For Preview,
+   - `SMTP_HOST`: `smtp.gmail.com` (optional, default)
+   - `SMTP_PORT`: `465` (optional, default)
+3. See `.env.example` for all configurable environment variables.
+4. Enable the variables for Production and redeploy the updated code. For Preview,
    configure CONTACT_ORIGIN to match the exact preview origin you want to test.
-4. Submit one test message yourself and confirm receipt and Reply-To in your inbox.
+5. Submit one test message yourself and confirm receipt and Reply-To in your inbox.
 
 Never use a `VITE_` prefix for these secrets. `.env` files are ignored by Git;
 `.env.example` contains placeholders only. SMTP errors are not exposed or logged.

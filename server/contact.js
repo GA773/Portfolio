@@ -149,8 +149,6 @@ export function contactEmail({ name, email, message }) {
 export function createContactHandler({ env = process.env, createTransport = nodemailer.createTransport, now = Date.now } = {}) {
   // Best-effort per-instance guard; use Vercel Firewall for cross-instance limits.
   const attempts = new Map();
-  const DEFAULT_SMTP_USER = 'gauravkumar9282@gmail.com';
-  const DEFAULT_SMTP_PASS = 'sutrnfneuqcaolyd';
   const DEFAULT_ORIGINS = 'https://portfolio-mu-nine-56.vercel.app,http://localhost:3000,http://localhost:5173';
 
   return async function handler(req, res) {
@@ -193,14 +191,22 @@ export function createContactHandler({ env = process.env, createTransport = node
     entry.count += 1;
     attempts.set(ip, entry);
 
-    const smtpUser = env.SMTP_USER !== undefined ? env.SMTP_USER : DEFAULT_SMTP_USER;
-    const smtpPass = env.SMTP_PASS !== undefined ? env.SMTP_PASS : DEFAULT_SMTP_PASS;
+    const smtpUser = env.SMTP_USER || env.SMTP_USERNAME || '';
+    const smtpPass = env.SMTP_PASS || env.SMTP_PASSWORD || '';
     const recipient = env.CONTACT_TO || smtpUser;
 
     if (!emailPattern.test(smtpUser || '') || !smtpPass || !emailPattern.test(recipient || '')) return reply(503, 'Email is temporarily unavailable. Please use the email link.');
     try {
+      const smtpHost = env.SMTP_HOST || 'smtp.gmail.com';
+      const smtpPort = Number(env.SMTP_PORT) || 465;
+      const smtpSecure = env.SMTP_SECURE !== undefined
+        ? (env.SMTP_SECURE === 'true' || env.SMTP_SECURE === true)
+        : (smtpPort === 465);
+
       const transport = createTransport({
-        host: 'smtp.gmail.com', port: 465, secure: true,
+        host: smtpHost,
+        port: smtpPort,
+        secure: smtpSecure,
         auth: { user: smtpUser, pass: smtpPass.replace(/\s/g, '') },
         connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 15000,
         disableFileAccess: true, disableUrlAccess: true,
