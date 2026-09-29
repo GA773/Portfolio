@@ -29,14 +29,24 @@ export function Contact() {
         body: JSON.stringify({ ...formData, website: honeypot.current?.value || '' }),
         signal: AbortSignal.timeout(30000),
       });
-      const result = await response.json();
-      if (!response.ok || result.ok !== true) throw new Error('send-failed');
+      let result: { ok?: boolean; error?: string } | null = null;
+      try {
+        result = await response.json();
+      } catch {
+        result = null;
+      }
+      if (!response.ok || result?.ok !== true) {
+        throw new Error(result?.error || 'send-failed');
+      }
       setStatus('success');
       setFeedback('Thank you! Your message has been sent. I’ll get back to you soon.');
       setFormData({ name: '', email: '', message: '' });
-    } catch {
+    } catch (err: unknown) {
       setStatus('error');
-      setFeedback('Unable to confirm delivery. Please try again later or contact me using the email link.');
+      const errorMsg = err instanceof Error && err.message !== 'send-failed'
+        ? err.message
+        : 'Unable to confirm delivery. Please try again later or contact me using the email link.';
+      setFeedback(errorMsg);
     } finally {
       sending.current = false;
     }

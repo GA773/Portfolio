@@ -151,6 +151,8 @@ export function createContactHandler({ env = process.env, createTransport = node
   const attempts = new Map();
   const DEFAULT_ORIGINS = 'https://portfolio-mu-nine-56.vercel.app,http://localhost:3000,http://localhost:5173';
 
+  const cleanStr = (val) => (typeof val === 'string' ? val.trim().replace(/^["']|["']$/g, '').trim() : '');
+
   return async function handler(req, res) {
     res.setHeader('Cache-Control', 'no-store');
     const reply = (status, error) => res.status(status).json(error ? { error } : { ok: true });
@@ -159,13 +161,17 @@ export function createContactHandler({ env = process.env, createTransport = node
       return reply(405, 'Method not allowed.');
     }
 
-    const originsConfig = env.CONTACT_ORIGIN !== undefined ? env.CONTACT_ORIGIN : DEFAULT_ORIGINS;
-    const allowedOrigins = (originsConfig || '').split(',').map(o => o.trim()).filter(Boolean);
-    const reqOrigin = req.headers.origin;
+    const activeEnv = env || process.env;
+    const originsConfig = activeEnv.CONTACT_ORIGIN !== undefined ? activeEnv.CONTACT_ORIGIN : DEFAULT_ORIGINS;
+    const allowedOrigins = (originsConfig || '').split(',').map(o => o.trim().replace(/\/$/, '')).filter(Boolean);
+    const reqOrigin = (req.headers.origin || '').trim().replace(/\/$/, '');
+    const reqReferer = (req.headers.referer || '').trim().replace(/\/$/, '');
     const isOriginAllowed = allowedOrigins.length > 0 && (
       allowedOrigins.includes(reqOrigin) ||
       allowedOrigins.includes('*') ||
-      (!env.CONTACT_ORIGIN && reqOrigin && reqOrigin.endsWith('.vercel.app'))
+      (reqOrigin && reqOrigin.endsWith('.vercel.app')) ||
+      (!reqOrigin && reqReferer && (allowedOrigins.some(o => reqReferer.startsWith(o)) || reqReferer.includes('.vercel.app'))) ||
+      (!reqOrigin && !reqReferer)
     );
     if (!isOriginAllowed) return reply(403, 'Request not allowed.');
 
@@ -191,23 +197,36 @@ export function createContactHandler({ env = process.env, createTransport = node
     entry.count += 1;
     attempts.set(ip, entry);
 
-    const smtpUser = env.SMTP_USER || env.SMTP_USERNAME || '';
-    const smtpPass = env.SMTP_PASS || env.SMTP_PASSWORD || '';
-    const recipient = env.CONTACT_TO || smtpUser;
+    const smtpUser = cleanStr(activeEnv.SMTP_USER || activeEnv.SMTP_USERNAME || process.env.SMTP_USER || process.env.SMTP_USERNAME);
+    const smtpPass = cleanStr(activeEnv.SMTP_PASS || activeEnv.SMTP_PASSWORD || process.env.SMTP_PASS || process.env.SMTP_PASSWORD).replace(/\s/g, '');
+    const recipient = cleanStr(activeEnv.CONTACT_TO || process.env.CONTACT_TO) || smtpUser;
 
-    if (!emailPattern.test(smtpUser || '') || !smtpPass || !emailPattern.test(recipient || '')) return reply(503, 'Email is temporarily unavailable. Please use the email link.');
+    if (!emailPattern.test(smtpUser || '') || !smtpPass || !emailPattern.test(recipient || '')) {
+      entry.count = Math.max(0, entry.count - 1);
+      console.error('[contact-api] Missing or invalid SMTP configuration:', {
+        hasUser: Boolean(smtpUser),
+        userValid: emailPattern.test(smtpUser || ''),
+        hasPass: Boolean(smtpPass),
+        passLength: smtpPass ? smtpPass.length : 0,
+        hasRecipient: Boolean(recipient),
+        recipientValid: emailPattern.test(recipient || ''),
+      });
+      return reply(503, 'Email is temporarily unavailable. Please use the email link.');
+    }
+
     try {
-      const smtpHost = env.SMTP_HOST || 'smtp.gmail.com';
-      const smtpPort = Number(env.SMTP_PORT) || 465;
-      const smtpSecure = env.SMTP_SECURE !== undefined
-        ? (env.SMTP_SECURE === 'true' || env.SMTP_SECURE === true)
+      const smtpHost = cleanStr(activeEnv.SMTP_HOST || process.env.SMTP_HOST) || 'smtp.gmail.com';
+      const smtpPort = Number(cleanStr(activeEnv.SMTP_PORT || process.env.SMTP_PORT)) || 465;
+      const rawSecure = activeEnv.SMTP_SECURE !== undefined ? activeEnv.SMTP_SECURE : process.env.SMTP_SECURE;
+      const smtpSecure = rawSecure !== undefined
+        ? (rawSecure === 'true' || rawSecure === true)
         : (smtpPort === 465);
 
       const transport = createTransport({
         host: smtpHost,
         port: smtpPort,
         secure: smtpSecure,
-        auth: { user: smtpUser, pass: smtpPass.replace(/\s/g, '') },
+        auth: { user: smtpUser, pass: smtpPass },
         connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 15000,
         disableFileAccess: true, disableUrlAccess: true,
       });
@@ -223,8 +242,9 @@ export function createContactHandler({ env = process.env, createTransport = node
         ...contactEmail({ name: name.trim(), email: email.trim(), message: message.trim() }),
       });
       return reply(200);
-    } catch {
-      // Never return or log SMTP credentials or visitor message content.
+    } catch (err) {
+      const safeErr = err && err.message ? err.message : String(err);
+      console.error('[contact-api] SMTP send error:', safeErr);
       return reply(502, 'Could not send your message. Please try again or use the email link.');
     }
   };
